@@ -1,9 +1,12 @@
+import 'package:bmi_calculator/screens/calculate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'card_reusable.dart';
-import 'icon_card.dart';
-import 'constants.dart';
+import '../components/card_reusable.dart';
+import '../components/icon_card.dart';
+import '../constants.dart';
+import 'result_page.dart';
+import '../components/bottom_button.dart';
 
 enum Gender { male, female }
 
@@ -91,10 +94,8 @@ class _InputPageState extends State<InputPage> {
                     data: SliderTheme.of(context).copyWith(
                       thumbColor: Colors.pinkAccent,
                       overlayColor: Color(0x29eb1555),
-                      thumbShape:
-                        RoundSliderThumbShape(enabledThumbRadius: 16),
-                      overlayShape:
-                        RoundSliderOverlayShape(overlayRadius: 26),
+                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 16),
+                      overlayShape: RoundSliderOverlayShape(overlayRadius: 26),
                     ),
                     child: Slider(
                       value: height.toDouble(),
@@ -170,7 +171,7 @@ class _InputPageState extends State<InputPage> {
                                   }),*/
                               RoundIconButton(
                                 icon: FontAwesomeIcons.minus,
-                                onPress: (){
+                                onPress: () {
                                   setState(() {
                                     weight--;
                                   });
@@ -181,7 +182,7 @@ class _InputPageState extends State<InputPage> {
                               ),
                               RoundIconButton(
                                 icon: FontAwesomeIcons.plus,
-                                onPress: (){
+                                onPress: () {
                                   setState(() {
                                     weight++;
                                   });
@@ -189,11 +190,9 @@ class _InputPageState extends State<InputPage> {
                               ),
                             ],
                           ),
-
                         ],
                       ),
-                      colores: kActiveColorCard
-                  ),
+                      colores: kActiveColorCard),
                 ),
                 Expanded(
                   child: CardReusable(
@@ -249,7 +248,7 @@ class _InputPageState extends State<InputPage> {
                                   }),*/
                               RoundIconButton(
                                 icon: FontAwesomeIcons.minus,
-                                onPress: (){
+                                onPress: () {
                                   setState(() {
                                     age--;
                                   });
@@ -260,7 +259,7 @@ class _InputPageState extends State<InputPage> {
                               ),
                               RoundIconButton(
                                 icon: FontAwesomeIcons.plus,
-                                onPress: (){
+                                onPress: () {
                                   setState(() {
                                     age++;
                                   });
@@ -268,20 +267,32 @@ class _InputPageState extends State<InputPage> {
                               ),
                             ],
                           ),
-
                         ],
                       ),
                       colores: kActiveColorCard),
                 ),
-
               ],
             ),
           ),
-          Container(
-            color: kBottomContainerColor,
-            margin: EdgeInsets.only(top: 10),
-            width: double.infinity,
-            height: kBottomHeight,
+          BottomButton(
+            onTap: () {
+
+              Calculate calc = Calculate(height: height, weight: weight);
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ResultPage(
+                      bmiResult: calc.calculateResult(),
+                      interpretation: calc.getResult(),
+                      resultText: calc.getInterpretation(),
+                    );
+                  },
+                ),
+              );
+            },
+            buttonTitle: 'Result',
           ),
         ],
       ),
@@ -289,9 +300,9 @@ class _InputPageState extends State<InputPage> {
   }
 }
 
-class RoundIconButton extends StatelessWidget {
 
-  RoundIconButton({@required this.icon,@required this.onPress});
+class RoundIconButton extends StatelessWidget {
+  RoundIconButton({@required this.icon, @required this.onPress});
   final IconData icon;
   final Function onPress;
 
